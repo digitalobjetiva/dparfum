@@ -249,9 +249,9 @@ const resumeJsonPath = id ? `dados/${id}.json` : 'dados/modelo.json';
 // valores padrão apenas para cumprimentos
 const mensagensPadrao = {
   cumprimentos: {
-    manha: 'Bom dia! Aqui é a Dani. Como posso te ajudar?',
-    tarde: 'Boa tarde! Aqui é a Dani. Como posso te ajudar?',
-    noite: 'Boa noite! Aqui é a Dani. Como posso te ajudar?'
+    manha: 'Aqui é a Dani. Como posso te ajudar?',
+    tarde: 'Aqui é a Dani. Como posso te ajudar?',
+    noite: 'Aqui é a Dani. Como posso te ajudar?'
   }
 };
 // configuração de WhatsApp vinda do JSON de currículo (ativo, numero, cumprimentos, mensagemPosCumprimento, mensagemPadrao)
