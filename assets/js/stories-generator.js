@@ -339,17 +339,38 @@ class StoriesStudio {
             const totalWidth = textWidth + iconSize + 25;
             const startX = (1080 - totalWidth) / 2;
             
-            try {
-                // Ícone oficial otimizado (PNG pequeno)
-                const wpIcon = await this.loadImage('https://cdn-icons-png.flaticon.com/512/124/124034.png');
-                this.ctx.drawImage(wpIcon, startX, 1720 - 35, iconSize, iconSize);
-            } catch(e) {
-                this.ctx.fillText("🟢", startX + 20, 1720); 
-            }
+            // Desenhar ícone do WhatsApp manualmente para evitar problemas de CORS
+            this.drawWhatsAppIcon(startX, 1720 - 35, iconSize);
             
             this.ctx.fillText(ctaText, startX + iconSize + 25 + textWidth/2, 1720);
             this.ctx.restore();
         }
+    }
+
+    drawWhatsAppIcon(x, y, size) {
+        this.ctx.save();
+        // Círculo Verde
+        this.ctx.fillStyle = '#25d366';
+        this.ctx.beginPath();
+        this.ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Desenho simplificado do balão de fala branco
+        this.ctx.fillStyle = 'white';
+        const inner = size * 0.6;
+        const offset = (size - inner) / 2;
+        this.ctx.beginPath();
+        this.ctx.arc(x + size/2, y + size/2, inner/2, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Pontinho do balão
+        this.ctx.beginPath();
+        this.ctx.moveTo(x + size/2 - inner/4, y + size/2 + inner/3);
+        this.ctx.lineTo(x + size/2 - inner/2, y + size/2 + inner/2);
+        this.ctx.lineTo(x + size/2 - inner/6, y + size/2 + inner/4);
+        this.ctx.fill();
+        
+        this.ctx.restore();
     }
 
     // Remover drawWhatsAppIcon pois agora usamos imagem original
@@ -419,6 +440,7 @@ class StoriesStudio {
         if (this.imageCache.has(src)) return Promise.resolve(this.imageCache.get(src));
         return new Promise((resolve, reject) => {
             const img = new Image();
+            img.crossOrigin = "anonymous"; // Evitar 'tainted canvas'
             img.onload = () => { this.imageCache.set(src, img); resolve(img); };
             img.onerror = reject;
             img.src = src;
@@ -426,11 +448,20 @@ class StoriesStudio {
     }
 
     download() {
-        const link = document.createElement('a');
-        const perfume = this.perfumeSelect.value.replace(/\s+/g, '-').toLowerCase();
-        link.download = `story-dparfum-${perfume}.png`;
-        link.href = this.canvas.toDataURL('image/png');
-        link.click();
+        try {
+            const link = document.createElement('a');
+            const perfume = (this.perfumeSelect.value || 'vazio').replace(/\s+/g, '-').toLowerCase();
+            link.download = `story-dparfum-${perfume}-${Date.now()}.png`;
+            
+            // Forçar a melhor qualidade possível
+            link.href = this.canvas.toDataURL('image/png', 1.0);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error("Erro ao baixar:", err);
+            alert("Não foi possível gerar o download. Tente clicar em 'Visualizar Story' primeiro ou use outro navegador.");
+        }
     }
 }
 
