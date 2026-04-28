@@ -28,6 +28,11 @@ class StoriesStudio {
         this.btnRegenerate.addEventListener('click', () => this.generateText());
         this.btnDownload.addEventListener('click', () => this.download());
         
+        // Boas-vindas
+        document.getElementById('btn-enter-studio').addEventListener('click', () => {
+            document.getElementById('welcome-screen').classList.add('is-hidden');
+        });
+        
         // Novos controles
         document.getElementById('story-layout').addEventListener('change', () => this.render());
         document.getElementById('story-badge').addEventListener('change', () => this.render());
