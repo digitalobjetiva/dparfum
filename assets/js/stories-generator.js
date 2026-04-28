@@ -266,6 +266,12 @@ class StoriesStudio {
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1430, 800, fontSize * 1.3);
         }
+
+        // CTA RODAPÉ (WhatsApp)
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = isLight ? '#1b4d3e' : '#25d366'; // Verde WhatsApp
+        this.ctx.font = 'bold 38px Inter, sans-serif';
+        this.ctx.fillText("🟢 COMPRE AGORA PELO WHATSAPP", 540, 1720);
     }
 
     drawBadge(type) {
