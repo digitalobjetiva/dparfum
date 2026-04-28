@@ -136,13 +136,18 @@ class StoriesStudio {
 
         this.isGenerating = true;
         const name = option.value;
-        const notes = option.dataset.notes;
-        const family = option.dataset.family;
+        const notes = option.dataset.notes || '';
+        const family = option.dataset.family || '';
         const type = document.getElementById('story-type').value;
 
-        this.captionArea.value = isFullReview 
-            ? `Inspirado em ${name}, esta fragrância da família ${family} é puro luxo... (Redigindo resenha completa ✨)` 
-            : this.getTemplateText(name, notes, type);
+        // RASCUNHO LOCAL INSTANTÂNEO (0ms de espera)
+        if (isFullReview) {
+            const notesList = notes.split(',').slice(0, 3).join(', ');
+            this.captionArea.value = `Descubra o fascínio de ${name}. Uma fragrância magnífica da família ${family}, que combina notas de ${notesList} para criar uma presença inesquecível. Perfeito para quem busca luxo e sofisticação em cada detalhe. ✨`;
+        } else {
+            this.captionArea.value = this.getTemplateText(name, notes, type);
+        }
+        
         this.render(); 
 
         try {
@@ -335,9 +340,12 @@ class StoriesStudio {
             const startX = (1080 - totalWidth) / 2;
             
             try {
-                const wpIcon = await this.loadImage('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png');
+                // Ícone oficial otimizado (PNG pequeno)
+                const wpIcon = await this.loadImage('https://cdn-icons-png.flaticon.com/512/124/124034.png');
                 this.ctx.drawImage(wpIcon, startX, 1720 - 35, iconSize, iconSize);
-            } catch(e) {}
+            } catch(e) {
+                this.ctx.fillText("🟢", startX + 20, 1720); 
+            }
             
             this.ctx.fillText(ctaText, startX + iconSize + 25 + textWidth/2, 1720);
             this.ctx.restore();
