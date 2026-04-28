@@ -316,7 +316,7 @@ fetch(`${resumeJsonPath}?t=${Date.now()}`)
 
 // Função para atualizar cabeçalho do chat (nome, foto e link) a partir dos dados exibidos na página
 function updateChatHeader() {
-  const nome = "D'Parfum";
+  const nome = "Dani";
   const fotoPadrao = 'img/danielle/placeholder.png';
   const fotoRaw = document.getElementById('inicio-imagem')?.src || fotoPadrao;
   const fotoPath = fotoRaw.split('?')[0];
