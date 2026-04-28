@@ -207,6 +207,9 @@
 .welcome-logo {
     height: 40px;
     margin-bottom: 2rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .welcome-content h1 {
