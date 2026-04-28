@@ -1,0 +1,13 @@
+{
+  "whatsapp": {
+    "ativo": true,
+    "numero": "5521993543808",
+    "cumprimentos": {
+      "manha": "Bom dia! Aqui é a D'Parfum. Como podemos ajudar?",
+      "tarde": "Boa tarde! Aqui é a D'Parfum. Como podemos ajudar?",
+      "noite": "Boa noite! Aqui é a D'Parfum. Como podemos ajudar?"
+    },
+    "mensagemPosCumprimento": "Estamos prontos para indicar a fragrância inspirada ideal para você.",
+    "mensagemPadrao": "Olá! Gostaria de mais informações sobre os perfumes inspirados da D'Parfum."
+  }
+}

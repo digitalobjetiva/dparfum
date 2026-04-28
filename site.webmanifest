@@ -1,0 +1,16 @@
+{
+  "name": "D'Parfum",
+  "short_name": "D'Parfum",
+  "description": "Perfumes inspirados em grandes grifes, alta fixação e atendimento consultivo.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#174c2f",
+  "icons": [
+    {
+      "src": "/img/logo/logo-redonda.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

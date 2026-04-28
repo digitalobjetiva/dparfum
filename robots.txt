@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dparfum.shop/sitemap.xml
