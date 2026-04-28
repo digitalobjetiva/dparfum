@@ -83,8 +83,11 @@ class StoriesStudio {
             
             this.perfumeSelect.addEventListener('change', () => {
                 if (this.perfumeSelect.value) {
+                    this.customImage = null; // Limpa o upload anterior ao escolher um perfume
                     this.generateText();
+                    this.render(); // Força o render imediato
                 } else {
+                    this.customImage = null;
                     this.captionArea.value = "Sua frase personalizada aqui...";
                     this.render();
                 }
