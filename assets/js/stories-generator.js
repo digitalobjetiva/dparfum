@@ -131,7 +131,9 @@ class StoriesStudio {
         const badge = document.getElementById('story-badge').value;
         const fontSize = document.getElementById('font-size').value;
 
-        // O render agora é síncrono para ser instantâneo se a imagem estiver em cache
+        // Mostrar loader apenas se necessário (primeiro carregamento ou troca de perfume)
+        const loader = document.getElementById('canvas-loader');
+        
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBackground();
 
@@ -148,6 +150,8 @@ class StoriesStudio {
             this.ctx.drawImage(logo, (1080 - 300) / 2, 1780, 300, 80);
         } catch (e) {}
 
+        // Garantir que o loader suma SEMPRE ao final
+        if (loader) loader.hidden = true;
         this.btnDownload.disabled = false;
     }
 
@@ -156,27 +160,27 @@ class StoriesStudio {
         const style = this.currentStyle;
 
         if (style === 'elegant') {
-            grad.addColorStop(0, '#1b4d3e');
+            grad.addColorStop(0, '#1b4d3e'); // Esmeralda D'Parfum
             grad.addColorStop(1, '#0a1f1a');
+        } else if (style === 'gold') {
+            grad.addColorStop(0, '#d4af37'); // Gold Real
+            grad.addColorStop(1, '#8a6d3b');
+        } else if (style === 'rose') {
+            grad.addColorStop(0, '#e5b3a4'); // Rose Gold
+            grad.addColorStop(1, '#a67c74');
         } else if (style === 'modern') {
-            grad.addColorStop(0, '#111');
-            grad.addColorStop(1, '#000');
-        } else if (style === 'minimal') {
-            grad.addColorStop(0, '#ffffff');
-            grad.addColorStop(1, '#f0f0f0');
-        } else {
-            grad.addColorStop(0, '#ff0080');
-            grad.addColorStop(1, '#7928ca');
+            grad.addColorStop(0, '#1a1a1a'); // Black Piano
+            grad.addColorStop(1, '#000000');
         }
 
         this.ctx.fillStyle = grad;
         this.ctx.fillRect(0, 0, 1080, 1920);
 
-        // Textura sutil
-        this.ctx.globalAlpha = 0.05;
-        this.ctx.strokeStyle = style === 'minimal' ? '#000' : '#fff';
-        for(let i=0; i<20; i++) {
-            this.ctx.strokeRect(Math.random()*1080, Math.random()*1920, 100, 100);
+        // Textura sutil metálica
+        this.ctx.globalAlpha = 0.03;
+        this.ctx.strokeStyle = '#fff';
+        for(let i=0; i<30; i++) {
+            this.ctx.strokeRect(Math.random()*1080, Math.random()*1920, 200, 2);
         }
         this.ctx.globalAlpha = 1.0;
     }
