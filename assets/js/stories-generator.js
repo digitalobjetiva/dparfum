@@ -42,6 +42,9 @@ class StoriesStudio {
         document.getElementById('font-size').addEventListener('input', () => this.render());
         document.getElementById('story-price').addEventListener('input', () => this.render());
         document.getElementById('product-glow').addEventListener('change', () => this.render());
+        document.getElementById('show-cta').addEventListener('change', () => this.render());
+        document.getElementById('cta-text').addEventListener('input', () => this.render());
+        document.getElementById('cta-color').addEventListener('input', () => this.render());
         
         // Upload Customizado
         document.getElementById('custom-upload').addEventListener('change', (e) => {
@@ -139,6 +142,9 @@ class StoriesStudio {
         const fontSize = document.getElementById('font-size').value;
         const price = document.getElementById('story-price').value;
         const hasGlow = document.getElementById('product-glow').checked;
+        const showCTA = document.getElementById('show-cta').checked;
+        const ctaText = document.getElementById('cta-text').value;
+        const ctaColor = document.getElementById('cta-color').value;
 
         const loader = document.getElementById('canvas-loader');
         
@@ -154,7 +160,7 @@ class StoriesStudio {
         } catch (e) { console.error("Image load error:", e); }
 
         // Desenhar Elementos de Texto e Selos
-        this.drawText(name, caption, layout, fontSize);
+        this.drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor);
         if (badge) this.drawBadge(badge);
         if (price) this.drawPrice(price, layout);
 
@@ -241,7 +247,7 @@ class StoriesStudio {
         this.ctx.shadowBlur = 0;
     }
 
-    drawText(name, caption, layout, fontSize) {
+    drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor) {
         const isLight = this.currentStyle === 'minimal';
         this.ctx.fillStyle = isLight ? '#1a1a1a' : 'white';
         
@@ -256,22 +262,48 @@ class StoriesStudio {
         } else if (layout === 'split') {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 90px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1350); // Desci o texto
+            this.ctx.fillText(name, 540, 1350); 
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1500, 850, fontSize * 1.3);
         } else {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 85px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1280); // Desci o texto
+            this.ctx.fillText(name, 540, 1280); 
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1430, 800, fontSize * 1.3);
         }
 
-        // CTA RODAPÉ (WhatsApp)
-        this.ctx.textAlign = 'center';
-        this.ctx.fillStyle = isLight ? '#1b4d3e' : '#25d366'; // Verde WhatsApp
-        this.ctx.font = 'bold 38px Inter, sans-serif';
-        this.ctx.fillText("🟢 COMPRE AGORA PELO WHATSAPP", 540, 1720);
+        // CTA RODAPÉ (Opcional)
+        if (showCTA) {
+            this.ctx.save();
+            this.ctx.textAlign = 'center';
+            this.ctx.fillStyle = ctaColor || '#25d366';
+            this.ctx.font = 'bold 36px Inter, sans-serif';
+            
+            const textWidth = this.ctx.measureText(ctaText).width;
+            const iconSize = 40;
+            const totalWidth = textWidth + iconSize + 15;
+            const startX = (1080 - totalWidth) / 2;
+            
+            this.drawWhatsAppIcon(startX + 20, 1720 - 15, iconSize);
+            this.ctx.fillText(ctaText, startX + iconSize + 15 + textWidth/2, 1720);
+            this.ctx.restore();
+        }
+    }
+
+    drawWhatsAppIcon(x, y, size) {
+        this.ctx.save();
+        this.ctx.fillStyle = '#25d366';
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size/2, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.strokeStyle = 'white';
+        this.ctx.lineWidth = 3;
+        this.ctx.lineCap = 'round';
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size/4, 0.5, 2.5);
+        this.ctx.stroke();
+        this.ctx.restore();
     }
 
     drawBadge(type) {
