@@ -10,16 +10,19 @@ export default async function handler(req, res) {
 
     try {
         const { perfumeName, notes, family, type, isFullReview } = req.body;
-        const today = new Date().toLocaleDateString('pt-BR');
-
-        let prompt = `Você é um especialista em marketing de luxo da D'Parfum. Hoje é dia ${today}.
-        Crie um texto curto e persuasivo para um Story de Instagram sobre o perfume "${perfumeName}".
-        Notas: ${notes}. Família: ${family}.
-        Objetivo: ${type}.`;
+        const now = new Date();
+        const today = now.toLocaleDateString('pt-BR');
+        
+        let prompt = `Você é um estrategista de vendas da D'Parfum. Hoje é ${today}.
+        Crie um Story para o perfume "${perfumeName}" (${notes}).`;
 
         if (type === 'seasonal') {
-            prompt += ` REGRAS SAZONAIS: Identifique se estamos perto de algum feriado ou data especial (Dia das Mães, Namorados, Natal, etc) baseado em ${today}. 
-            Crie um funil de vendas: desperte o desejo pelo presente ideal e termine com uma chamada para ação forte.`;
+            prompt += ` 
+            REGRAS OBRIGATÓRIAS DE DATAS (Estamos em ABRIL/MAIO):
+            1. Se estivermos entre 20/04 e 12/05, foque TOTALMENTE no DIA DAS MÃES.
+            2. Se estivermos em Junho, foque no DIA DOS NAMORADOS.
+            3. Se não houver feriado próximo, foque na ESTAÇÃO ATUAL (Outono: elegância, notas quentes).
+            O texto DEVE citar o nome da data comemorativa e ser um funil de vendas direto.`;
         }
 
         prompt += ` Use emojis e linguagem sofisticada. Máximo 280 caracteres.`;
