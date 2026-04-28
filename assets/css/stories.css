@@ -205,11 +205,10 @@
 }
 
 .welcome-logo {
-    height: 40px;
+    height: 60px; /* Aumentei um pouco para dar mais destaque */
+    width: auto;
     margin-bottom: 2rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-block;
 }
 
 .welcome-content h1 {
