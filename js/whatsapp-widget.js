@@ -249,9 +249,9 @@ const resumeJsonPath = id ? `dados/${id}.json` : 'dados/modelo.json';
 // valores padrão apenas para cumprimentos
 const mensagensPadrao = {
   cumprimentos: {
-    manha: 'Bom dia! Aqui é a Dani da D\'Parfum. Como posso te ajudar?',
-    tarde: 'Boa tarde! Aqui é a Dani da D\'Parfum. Como posso te ajudar?',
-    noite: 'Boa noite! Aqui é a Dani da D\'Parfum. Como posso te ajudar?'
+    manha: 'Bom dia! Aqui é a Dani. Como posso te ajudar?',
+    tarde: 'Boa tarde! Aqui é a Dani. Como posso te ajudar?',
+    noite: 'Boa noite! Aqui é a Dani. Como posso te ajudar?'
   }
 };
 // configuração de WhatsApp vinda do JSON de currículo (ativo, numero, cumprimentos, mensagemPosCumprimento, mensagemPadrao)
@@ -316,7 +316,7 @@ fetch(`${resumeJsonPath}?t=${Date.now()}`)
 
 // Função para atualizar cabeçalho do chat (nome, foto e link) a partir dos dados exibidos na página
 function updateChatHeader() {
-  const nome = "Dani";
+  const nome = "D'Parfum";
   const fotoPadrao = 'img/danielle/placeholder.png';
   const fotoRaw = document.getElementById('inicio-imagem')?.src || fotoPadrao;
   const fotoPath = fotoRaw.split('?')[0];
