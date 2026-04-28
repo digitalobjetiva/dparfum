@@ -1,0 +1,202 @@
+/* Estúdio D'Parfum | Design System para o Gerador de Stories */
+
+:root {
+    --studio-bg: #0f1115;
+    --sidebar-bg: #ffffff;
+    --accent: #1b4d3e; /* Verde D'Parfum */
+    --accent-light: #2d6a4f;
+    --text-main: #1a1a1a;
+    --text-muted: #666666;
+    --border: #e0e0e0;
+    --canvas-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.admin-page {
+    background-color: var(--studio-bg);
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.studio-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    height: 100vh;
+}
+
+/* Sidebar */
+.studio-sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.sidebar-logo {
+    height: 30px;
+    width: auto;
+}
+
+.badge {
+    background: #f0f0f0;
+    color: var(--accent);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.field {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.field:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.style-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.style-btn {
+    padding: 0.6rem;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.style-btn:hover {
+    border-color: var(--accent);
+}
+
+.style-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 2rem;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* Preview Area */
+.studio-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    background: radial-gradient(circle at center, #1a1d23 0%, #0f1115 100%);
+}
+
+.preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.canvas-wrapper {
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--canvas-shadow);
+    max-height: 85vh;
+    aspect-ratio: 9/16;
+}
+
+#story-canvas {
+    height: 100%;
+    width: auto;
+    display: block;
+}
+
+.preview-hint {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+}
+
+/* Loader */
+.loader-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 5;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Custom Buttons from site.css override */
+.button--small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+.button--dark {
+    background: #222;
+    color: white;
+}
+
+.button--dark:hover {
+    background: #333;
+}

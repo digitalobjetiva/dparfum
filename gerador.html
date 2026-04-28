@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estúdio D'Parfum | Gerador de Stories IA</title>
+    <link rel="stylesheet" href="assets/css/site.css">
+    <link rel="stylesheet" href="assets/css/stories.css">
+    <link rel="icon" href="img/favicon/favicon.ico">
+</head>
+<body class="admin-page">
+    <div class="studio-layout">
+        <!-- Sidebar de Controles -->
+        <aside class="studio-sidebar">
+            <div class="sidebar-header">
+                <img src="img/logo/logo-texto-preto.png" alt="D'Parfum Studio" class="sidebar-logo">
+                <span class="badge">IA v1.0</span>
+            </div>
+
+            <nav class="studio-nav">
+                <div class="control-group">
+                    <label for="perfume-select">Escolha o Perfume</label>
+                    <select id="perfume-select" class="field">
+                        <option value="">Carregando perfumes...</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="story-type">Objetivo do Story</label>
+                    <select id="story-type" class="field">
+                        <option value="promo">Promoção / Venda</option>
+                        <option value="edu">Dica / Curiosidade</option>
+                        <option value="seasonal">Data Sazonal (IA)</option>
+                        <option value="lifestyle">Lifestyle / Inspiração</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="style-preset">Estilo Visual</label>
+                    <div class="style-grid">
+                        <button class="style-btn active" data-style="elegant">Elegante</button>
+                        <button class="style-btn" data-style="modern">Moderno</button>
+                        <button class="style-btn" data-style="minimal">Minimal</button>
+                        <button class="style-btn" data-style="vibrant">Vibrante</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Legenda Gerada pela IA</label>
+                    <textarea id="ai-caption" class="field" rows="4" placeholder="A IA escreverá algo incrível aqui..."></textarea>
+                    <button id="btn-regenerate" class="button button--ghost button--small">✨ Recriar texto</button>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-generate" class="button button--primary full-width">Visualizar Story</button>
+                <button id="btn-download" class="button button--dark full-width" disabled>Baixar Imagem</button>
+            </div>
+        </aside>
+
+        <!-- Área de Preview -->
+        <main class="studio-preview">
+            <div class="preview-container">
+                <div class="canvas-wrapper">
+                    <canvas id="story-canvas" width="1080" height="1920"></canvas>
+                    <div id="canvas-loader" class="loader-overlay" hidden>
+                        <div class="spinner"></div>
+                        <p>A IA está criando a sua arte...</p>
+                    </div>
+                </div>
+                <div class="preview-hint">Tamanho real: 1080 x 1920 px (Ideal para Instagram)</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/site.js"></script>
+    <script src="assets/js/stories-generator.js"></script>
+</body>
+</html>

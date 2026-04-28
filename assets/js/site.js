@@ -572,9 +572,12 @@ function initBackToTop() {
 }
 
 const pages = { home: homePage, loja: lojaPage, produtos: productsPage, catalogo: catalogPage, sobre: aboutPage, contato: contactPage, duvidas: faqPage, noticias: articlesPage };
-const page = document.body.dataset.page || "home";
-document.querySelector("#app").innerHTML = layout(page, pages[page]());
-initMenu();
-initCatalog();
-initContactForm();
-initBackToTop();
+const appContainer = document.querySelector("#app");
+if (appContainer) {
+    const page = document.body.dataset.page || "home";
+    appContainer.innerHTML = layout(page, pages[page]());
+    initMenu();
+    initCatalog();
+    initContactForm();
+    initBackToTop();
+}
