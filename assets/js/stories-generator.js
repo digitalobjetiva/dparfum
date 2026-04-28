@@ -254,33 +254,44 @@ class StoriesStudio {
     drawBadge(type) {
         const labels = {
             lancamento: 'LANÇAMENTO',
+            novidade: 'NOVIDADE',
+            campeao: 'CAMPEÃO DE VENDAS',
             promo: 'OFERTA ESPECIAL',
             vip: 'EXCLUSIVO VIP',
-            last: 'ÚLTIMAS UNIDADES'
+            last: 'ÚLTIMAS UNIDADES',
+            fixacao: 'FIXAÇÃO 24H',
+            luxo: 'LUXO ACESSÍVEL'
         };
         
         this.ctx.save();
-        // Mover para uma posição mais segura
-        this.ctx.translate(220, 180);
+        // Posicionamento estratégico para o canto
+        this.ctx.translate(180, 180);
         this.ctx.rotate(-Math.PI / 4);
         
-        // Sombra do selo
-        this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
-        this.ctx.shadowBlur = 15;
+        // Sombra realista
+        this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        this.ctx.shadowBlur = 20;
+        this.ctx.shadowOffsetY = 5;
 
-        // Fundo Dourado
-        this.ctx.fillStyle = '#d4af37'; 
-        this.ctx.fillRect(-300, -45, 600, 90);
+        // Degradê Dourado Metálico
+        const grad = this.ctx.createLinearGradient(-400, 0, 400, 0);
+        grad.addColorStop(0, '#8a6d3b');
+        grad.addColorStop(0.5, '#d4af37');
+        grad.addColorStop(1, '#8a6d3b');
         
-        // Borda Dupla (Efeito Luxo)
-        this.ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(-300, -38, 600, 76);
+        this.ctx.fillStyle = grad;
+        // Faixa bem comprida (800px) para não mostrar as pontas
+        this.ctx.fillRect(-400, -45, 800, 90);
         
-        // Texto
+        // Bordas de Luxo
         this.ctx.shadowBlur = 0;
+        this.ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeRect(-400, -38, 800, 76);
+        
+        // Texto em destaque
         this.ctx.fillStyle = 'black';
-        this.ctx.font = 'bold 32px Inter, sans-serif';
+        this.ctx.font = 'bold 30px Inter, sans-serif';
         this.ctx.textAlign = 'center';
         this.ctx.fillText(labels[type], 0, 12);
         
