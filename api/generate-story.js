@@ -10,13 +10,19 @@ export default async function handler(req, res) {
 
     try {
         const { perfumeName, notes, family, type, isFullReview } = req.body;
+        const today = new Date().toLocaleDateString('pt-BR');
 
-        let prompt = `Você é um especialista em perfumaria de luxo da D'Parfum.
+        let prompt = `Você é um especialista em marketing de luxo da D'Parfum. Hoje é dia ${today}.
         Crie um texto curto e persuasivo para um Story de Instagram sobre o perfume "${perfumeName}".
-        Notas olfativas: ${notes}.
-        Família: ${family}.
-        Objetivo do story: ${type}.
-        Use emojis e uma linguagem sofisticada, mas direta. Máximo 300 caracteres.`;
+        Notas: ${notes}. Família: ${family}.
+        Objetivo: ${type}.`;
+
+        if (type === 'seasonal') {
+            prompt += ` REGRAS SAZONAIS: Identifique se estamos perto de algum feriado ou data especial (Dia das Mães, Namorados, Natal, etc) baseado em ${today}. 
+            Crie um funil de vendas: desperte o desejo pelo presente ideal e termine com uma chamada para ação forte.`;
+        }
+
+        prompt += ` Use emojis e linguagem sofisticada. Máximo 280 caracteres.`;
 
         if (isFullReview) {
             prompt = `Aja como um sommelier de perfumes. Escreva uma resenha luxuosa e envolvente sobre o perfume "${perfumeName}".
