@@ -317,12 +317,13 @@ fetch(`${resumeJsonPath}?t=${Date.now()}`)
 // Função para atualizar cabeçalho do chat (nome, foto e link) a partir dos dados exibidos na página
 function updateChatHeader() {
   const nome = "D'Parfum";
-  const fotoRaw = document.getElementById('inicio-imagem')?.src || 'img/logo/logo-redonda.png';
+  const fotoPadrao = 'img/danielle/placeholder.png';
+  const fotoRaw = document.getElementById('inicio-imagem')?.src || fotoPadrao;
   const fotoPath = fotoRaw.split('?')[0];
   const logoEl = document.querySelector('#chatBox .chat-header img#chatLogo');
   const titleEl = document.querySelector('#chatBox .chat-header strong');
   if (logoEl) {
-    logoEl.src = fotoPath || 'img/logo/logo-redonda.png';
+    logoEl.src = fotoPath || fotoPadrao;
     logoEl.onerror = () => { logoEl.src = 'img/logo/logo-redonda.png'; };
   }
   if (titleEl) titleEl.textContent = nome;
