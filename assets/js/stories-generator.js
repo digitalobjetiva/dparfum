@@ -229,16 +229,19 @@ class StoriesStudio {
         
         if (layout === 'center') {
             w = img.width * scale; h = img.height * scale;
-            x = (1080 - w) / 2; y = 350; // Subi o produto
+            x = (1080 - w) / 2; y = 350; 
         } else if (layout === 'split') {
             w = img.width * 1.0; h = img.height * 1.0;
             x = (1080 - w) / 2; y = 100;
         } else if (layout === 'magazine') {
             w = img.width * 0.85; h = img.height * 0.85;
             x = 1080 - w - 100; y = 450;
+        } else if (layout === 'focus') {
+            w = img.width * 1.0; h = img.height * 1.0;
+            x = (1080 - w) / 2; y = 200; // Bem no topo para dar foco
         } else {
-            w = img.width * 1.1; h = img.height * 1.1;
-            x = (1080 - w) / 2; y = 250;
+            w = img.width * scale; h = img.height * scale;
+            x = (1080 - w) / 2; y = 300;
         }
 
         this.ctx.shadowColor = 'rgba(0,0,0,0.4)';
@@ -265,6 +268,12 @@ class StoriesStudio {
             this.ctx.fillText(name, 540, 1350); 
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1500, 850, fontSize * 1.3);
+        } else if (layout === 'focus') {
+            this.ctx.textAlign = 'center';
+            this.ctx.font = 'bold 85px Inter, sans-serif';
+            this.ctx.fillText(name, 540, 1400); // Texto mais baixo
+            this.ctx.font = `${fontSize}px Inter, sans-serif`;
+            this.wrapText(caption, 540, 1530, 800, fontSize * 1.3);
         } else {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 85px Inter, sans-serif';
