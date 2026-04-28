@@ -254,6 +254,66 @@
         .button {
           width: 100%;
         }
+
+        /* Slider Mobile Style */
+        .mobile-slider-container {
+          display: block;
+          margin-top: 20px;
+          user-select: none;
+        }
+
+        .slider-track {
+          position: relative;
+          height: 56px;
+          background: rgba(23, 76, 47, 0.08);
+          border-radius: 999px;
+          border: 1px solid var(--line);
+          display: flex;
+          align-items: center;
+          padding: 4px;
+          overflow: hidden;
+        }
+
+        .slider-text {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--forest);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          pointer-events: none;
+          background: linear-gradient(to right, var(--forest) 0%, #fff 50%, var(--forest) 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 2s infinite linear;
+        }
+
+        .slider-thumb {
+          position: relative;
+          z-index: 2;
+          width: 48px;
+          height: 48px;
+          background: var(--forest);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          box-shadow: 0 4px 12px rgba(23, 76, 47, 0.3);
+          cursor: grab;
+          touch-action: none;
+        }
+
+        @keyframes shimmer {
+          to { background-position: 200% center; }
+        }
+      }
+
+      @media (min-width: 761px) {
+        .mobile-slider-container { display: none; }
       }
     </style>
   </head>
@@ -282,7 +342,7 @@
             e condição comercial vigente. Para confirmar o pedido, fale com a D'Parfum pelo WhatsApp.
           </p>
 
-          <div class="table-wrap">
+          <div class="table-wrap" id="price-table">
             <table aria-label="Tabela de referência de valores D'Parfum 2025">
               <thead>
                 <tr>
@@ -344,6 +404,62 @@
               </tbody>
             </table>
           </div>
+
+          <!-- Slider Mobile -->
+          <div class="mobile-slider-container">
+            <div class="slider-track">
+              <div class="slider-text">Arraste para ver preços</div>
+              <div class="slider-thumb" id="slider-thumb">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            const thumb = document.getElementById('slider-thumb');
+            const track = thumb.parentElement;
+            const table = document.getElementById('price-table');
+            let isDragging = false;
+            let startX, thumbLeft;
+
+            const onStart = (e) => {
+              isDragging = true;
+              startX = (e.pageX || e.touches[0].pageX);
+              thumbLeft = thumb.offsetLeft;
+              thumb.style.cursor = 'grabbing';
+            };
+
+            const onMove = (e) => {
+              if (!isDragging) return;
+              const x = (e.pageX || e.touches[0].pageX);
+              const walk = x - startX;
+              const maxRange = track.offsetWidth - thumb.offsetWidth - 8;
+              let newLeft = thumbLeft + walk;
+              
+              if (newLeft < 4) newLeft = 4;
+              if (newLeft > maxRange) newLeft = maxRange;
+              
+              thumb.style.left = newLeft + 'px';
+              
+              // Sincronizar com o scroll da tabela
+              const scrollPercent = (newLeft - 4) / (maxRange - 4);
+              const maxTableScroll = table.scrollWidth - table.offsetWidth;
+              table.scrollLeft = scrollPercent * maxTableScroll;
+            };
+
+            const onEnd = () => {
+              isDragging = false;
+              thumb.style.cursor = 'grab';
+            };
+
+            thumb.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            thumb.addEventListener('touchstart', onStart);
+            window.addEventListener('touchmove', onMove);
+            window.addEventListener('touchend', onEnd);
+          </script>
 
           <h2 class="section-title">Como escolher com segurança</h2>
           <div class="cards">
