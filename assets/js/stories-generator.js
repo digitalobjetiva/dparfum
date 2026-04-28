@@ -244,16 +244,29 @@ class StoriesStudio {
         };
         
         this.ctx.save();
-        this.ctx.translate(150, 150);
+        // Mover para uma posição mais segura
+        this.ctx.translate(220, 180);
         this.ctx.rotate(-Math.PI / 4);
         
-        this.ctx.fillStyle = '#d4af37'; // Gold
-        this.ctx.fillRect(-200, -40, 400, 80);
+        // Sombra do selo
+        this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        this.ctx.shadowBlur = 15;
+
+        // Fundo Dourado
+        this.ctx.fillStyle = '#d4af37'; 
+        this.ctx.fillRect(-300, -45, 600, 90);
         
+        // Borda Dupla (Efeito Luxo)
+        this.ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeRect(-300, -38, 600, 76);
+        
+        // Texto
+        this.ctx.shadowBlur = 0;
         this.ctx.fillStyle = 'black';
-        this.ctx.font = 'bold 30px Inter, sans-serif';
+        this.ctx.font = 'bold 32px Inter, sans-serif';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(labels[type], 0, 10);
+        this.ctx.fillText(labels[type], 0, 12);
         
         this.ctx.restore();
     }
