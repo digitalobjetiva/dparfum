@@ -11,11 +11,13 @@ class StoriesStudio {
         this.btnDownload = document.getElementById('btn-download');
         this.btnRegenerate = document.getElementById('btn-regenerate');
         this.captionArea = document.getElementById('ai-caption');
+        this.btnAIChoice = document.getElementById('btn-ai-choice');
         
         this.imageCache = new Map();
         this.currentStyle = 'elegant';
         this.isGenerating = false;
         this.customImage = null;
+        this.isAIMode = false;
         
         this.init();
     }
@@ -27,6 +29,7 @@ class StoriesStudio {
         this.btnGenerate.addEventListener('click', () => this.render());
         this.btnRegenerate.addEventListener('click', () => this.generateText());
         this.btnDownload.addEventListener('click', () => this.download());
+        this.btnAIChoice.addEventListener('click', () => this.triggerAISelection());
         
         // Tela de Boas-vindas
         const btnEnter = document.getElementById('btn-enter-studio');
@@ -69,8 +72,34 @@ class StoriesStudio {
             });
         });
 
-        // Render inicial
         setTimeout(() => this.render(), 800);
+    }
+
+    triggerAISelection() {
+        const options = Array.from(this.perfumeSelect.options).filter(o => o.value !== "");
+        if (options.length === 0) return;
+        
+        const random = options[Math.floor(Math.random() * options.length)];
+        this.perfumeSelect.value = random.value;
+        this.isAIMode = true;
+        this.customImage = null;
+        
+        // Configurações para o modo IA
+        document.getElementById('story-type').value = 'edu';
+        document.getElementById('story-layout').value = 'center';
+        document.getElementById('story-badge').value = '';
+        document.getElementById('story-price').value = '';
+        document.getElementById('show-cta').checked = true;
+        
+        // Bloquear outros controles
+        document.querySelectorAll('.control-group:not(.studio-main-controls)').forEach(el => {
+            if (!el.contains(this.btnAIChoice)) {
+                el.style.opacity = '0.3';
+                el.style.pointerEvents = 'none';
+            }
+        });
+
+        this.generateText(true);
     }
 
     populatePerfumes() {
@@ -82,10 +111,16 @@ class StoriesStudio {
             ).join('');
             
             this.perfumeSelect.addEventListener('change', () => {
+                this.isAIMode = false; // Resetar modo IA ao trocar manualmente
+                document.querySelectorAll('.control-group').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.pointerEvents = 'auto';
+                });
+
                 if (this.perfumeSelect.value) {
-                    this.customImage = null; // Limpa o upload anterior ao escolher um perfume
+                    this.customImage = null;
                     this.generateText();
-                    this.render(); // Força o render imediato
+                    this.render();
                 } else {
                     this.customImage = null;
                     this.captionArea.value = "Sua frase personalizada aqui...";
@@ -95,7 +130,7 @@ class StoriesStudio {
         }
     }
 
-    async generateText() {
+    async generateText(isFullReview = false) {
         const option = this.perfumeSelect.selectedOptions[0];
         if (!option || this.isGenerating) return;
 
@@ -105,15 +140,14 @@ class StoriesStudio {
         const family = option.dataset.family;
         const type = document.getElementById('story-type').value;
 
-        // Renderização Otimista
-        this.captionArea.value = this.getTemplateText(name, notes, type);
+        this.captionArea.value = isFullReview ? "A IA está redigindo uma resenha completa para você..." : this.getTemplateText(name, notes, type);
         this.render(); 
 
         try {
             const response = await fetch('/api/generate-story', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ perfumeName: name, notes, family, type })
+                body: JSON.stringify({ perfumeName: name, notes, family, type, isFullReview })
             });
             
             const data = await response.json();
@@ -148,7 +182,7 @@ class StoriesStudio {
         const caption = this.captionArea.value;
         const layout = document.getElementById('story-layout').value;
         const badge = document.getElementById('story-badge').value;
-        const fontSize = document.getElementById('font-size').value;
+        const fontSize = this.isAIMode ? 32 : document.getElementById('font-size').value; // Fonte menor para resenha
         const price = document.getElementById('story-price').value;
         const hasGlow = document.getElementById('product-glow').checked;
         const showCTA = document.getElementById('show-cta').checked;
@@ -157,11 +191,9 @@ class StoriesStudio {
 
         const loader = document.getElementById('canvas-loader');
         
-        // Limpar e desenhar fundo
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBackground();
 
-        // Desenhar Produto e Brilho (Apenas se houver imagem)
         if (imgPath) {
             try {
                 const img = await this.loadImage(imgPath);
@@ -170,23 +202,19 @@ class StoriesStudio {
             } catch (e) { console.error("Image load error:", e); }
         }
 
-        // Desenhar Elementos de Texto e Selos
         this.drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor);
-        if (badge) this.drawBadge(badge);
-        if (price) this.drawPrice(price, layout);
+        if (badge && !this.isAIMode) this.drawBadge(badge);
+        if (price && !this.isAIMode) this.drawPrice(price, layout);
 
-        // Logo Final
         try {
             const logo = await this.loadImage('img/logo/logo-texto-branco.png');
             this.ctx.drawImage(logo, (1080 - 300) / 2, 1780, 300, 80);
         } catch (e) {}
 
-        // ESCONDER LOADER (IMPORTANTE)
         if (loader) {
             loader.classList.add('is-hidden');
-            loader.hidden = true; // Força dupla
+            loader.hidden = true;
         }
-        
         this.btnDownload.disabled = false;
     }
 
@@ -236,11 +264,11 @@ class StoriesStudio {
 
     drawProduct(img, layout) {
         let w, h, x, y;
-        const scale = 0.75; // Reduzi levemente a escala
+        const scale = this.isAIMode ? 0.6 : 0.75;
         
         if (layout === 'center') {
             w = img.width * scale; h = img.height * scale;
-            x = (1080 - w) / 2; y = 350; 
+            x = (1080 - w) / 2; y = this.isAIMode ? 250 : 350; 
         } else if (layout === 'split') {
             w = img.width * 1.0; h = img.height * 1.0;
             x = (1080 - w) / 2; y = 100;
@@ -249,7 +277,7 @@ class StoriesStudio {
             x = 1080 - w - 100; y = 450;
         } else if (layout === 'focus') {
             w = img.width * 1.0; h = img.height * 1.0;
-            x = (1080 - w) / 2; y = 200; // Bem no topo para dar foco
+            x = (1080 - w) / 2; y = 200;
         } else {
             w = img.width * scale; h = img.height * scale;
             x = (1080 - w) / 2; y = 300;
@@ -265,7 +293,14 @@ class StoriesStudio {
         const isLight = this.currentStyle === 'minimal';
         this.ctx.fillStyle = isLight ? '#1a1a1a' : 'white';
         
-        if (layout === 'magazine') {
+        if (this.isAIMode) {
+            // Layout Especial para Resenha
+            this.ctx.textAlign = 'center';
+            this.ctx.font = 'bold 70px Inter, sans-serif';
+            this.ctx.fillText(name, 540, 1100);
+            this.ctx.font = `34px Inter, sans-serif`;
+            this.wrapText(caption, 540, 1200, 900, 45);
+        } else if (layout === 'magazine') {
             this.ctx.textAlign = 'left';
             this.ctx.font = 'bold 120px Inter, sans-serif';
             this.ctx.fillText(name.split(' ')[0], 100, 300);
@@ -276,35 +311,26 @@ class StoriesStudio {
         } else if (layout === 'split') {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 90px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1350); 
+            this.ctx.fillText(name, 540, 1350);
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1500, 850, fontSize * 1.3);
-        } else if (layout === 'focus') {
-            this.ctx.textAlign = 'center';
-            this.ctx.font = 'bold 85px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1400); // Texto mais baixo
-            this.ctx.font = `${fontSize}px Inter, sans-serif`;
-            this.wrapText(caption, 540, 1530, 800, fontSize * 1.3);
         } else {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 85px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1280); 
+            this.ctx.fillText(name, 540, 1280);
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 540, 1430, 800, fontSize * 1.3);
         }
 
-        // CTA RODAPÉ (Opcional)
         if (showCTA) {
             this.ctx.save();
             this.ctx.textAlign = 'center';
             this.ctx.fillStyle = ctaColor || '#25d366';
             this.ctx.font = 'bold 36px Inter, sans-serif';
-            
             const textWidth = this.ctx.measureText(ctaText).width;
             const iconSize = 40;
             const totalWidth = textWidth + iconSize + 15;
             const startX = (1080 - totalWidth) / 2;
-            
             this.drawWhatsAppIcon(startX + 20, 1720 - 15, iconSize);
             this.ctx.fillText(ctaText, startX + iconSize + 15 + textWidth/2, 1720);
             this.ctx.restore();

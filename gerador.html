@@ -28,12 +28,20 @@
             </div>
 
             <nav class="studio-nav">
-                <div class="control-group">
-                    <label for="perfume-select">Escolha o Perfume</label>
-                    <select id="perfume-select" class="field">
-                        <option value="">Carregando perfumes...</option>
-                    </select>
+                <div class="studio-controls">
+                    <div class="control-group">
+                        <button id="btn-ai-choice" class="button button--accent full-width">✨ Deixar a IA Escolher</button>
+                        <p class="text-muted" style="font-size: 0.75rem; margin-top: 5px; text-align: center;">A IA escolhe o perfume e faz a resenha por você.</p>
+                    </div>
+
+                    <div class="control-group studio-main-controls">
+                        <label for="perfume-select">Escolha o Perfume</label>
+                        <select id="perfume-select" class="field">
+                            <option value="">Carregando perfumes...</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="control-group">
                     <label for="story-type">Objetivo do Story</label>
                     <select id="story-type" class="field">
