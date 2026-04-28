@@ -171,6 +171,12 @@ class StoriesStudio {
         } else if (style === 'modern') {
             grad.addColorStop(0, '#1a1a1a'); // Black Piano
             grad.addColorStop(1, '#000000');
+        } else if (style === 'minimal') {
+            grad.addColorStop(0, '#ffffff'); // Minimalista
+            grad.addColorStop(1, '#f0f0f0');
+        } else if (style === 'vibrant') {
+            grad.addColorStop(0, '#ff0080'); // Vibrante
+            grad.addColorStop(1, '#7928ca');
         }
 
         this.ctx.fillStyle = grad;
