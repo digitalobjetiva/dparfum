@@ -13,9 +13,9 @@ class StoriesStudio {
         this.captionArea = document.getElementById('ai-caption');
         
         this.imageCache = new Map();
-        this.currentPerfume = null;
         this.currentStyle = 'elegant';
         this.isGenerating = false;
+        this.customImage = null;
         
         this.init();
     }
@@ -23,20 +23,25 @@ class StoriesStudio {
     init() {
         this.populatePerfumes();
         
-        // Listeners
+        // Listeners Principais
         this.btnGenerate.addEventListener('click', () => this.render());
         this.btnRegenerate.addEventListener('click', () => this.generateText());
         this.btnDownload.addEventListener('click', () => this.download());
         
-        // Boas-vindas
-        document.getElementById('btn-enter-studio').addEventListener('click', () => {
-            document.getElementById('welcome-screen').classList.add('is-hidden');
-        });
+        // Tela de Boas-vindas
+        const btnEnter = document.getElementById('btn-enter-studio');
+        if (btnEnter) {
+            btnEnter.addEventListener('click', () => {
+                document.getElementById('welcome-screen').classList.add('is-hidden');
+            });
+        }
         
-        // Novos controles
+        // Controles de Customização
         document.getElementById('story-layout').addEventListener('change', () => this.render());
         document.getElementById('story-badge').addEventListener('change', () => this.render());
         document.getElementById('font-size').addEventListener('input', () => this.render());
+        document.getElementById('story-price').addEventListener('input', () => this.render());
+        document.getElementById('product-glow').addEventListener('change', () => this.render());
         
         // Upload Customizado
         document.getElementById('custom-upload').addEventListener('change', (e) => {
@@ -51,6 +56,7 @@ class StoriesStudio {
             }
         });
 
+        // Seleção de Estilo
         document.querySelectorAll('.style-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
@@ -59,7 +65,9 @@ class StoriesStudio {
                 this.render();
             });
         });
-        setTimeout(() => this.render(), 500);
+
+        // Render inicial
+        setTimeout(() => this.render(), 800);
     }
 
     populatePerfumes() {
@@ -71,7 +79,6 @@ class StoriesStudio {
             
             this.perfumeSelect.addEventListener('change', () => {
                 this.generateText();
-                this.render();
             });
         }
     }
@@ -86,7 +93,7 @@ class StoriesStudio {
         const family = option.dataset.family;
         const type = document.getElementById('story-type').value;
 
-        // Renderização Otimista: Mostra o story com template antes da IA responder
+        // Renderização Otimista
         this.captionArea.value = this.getTemplateText(name, notes, type);
         this.render(); 
 
@@ -100,10 +107,10 @@ class StoriesStudio {
             const data = await response.json();
             if (data.text) {
                 this.captionArea.value = data.text;
-                this.render(); // Re-renderiza com o texto final da IA
+                this.render();
             }
         } catch (error) {
-            console.warn("API Error, staying with template.");
+            console.warn("API Error:", error);
         } finally {
             this.isGenerating = false;
         }
@@ -130,28 +137,39 @@ class StoriesStudio {
         const layout = document.getElementById('story-layout').value;
         const badge = document.getElementById('story-badge').value;
         const fontSize = document.getElementById('font-size').value;
+        const price = document.getElementById('story-price').value;
+        const hasGlow = document.getElementById('product-glow').checked;
 
-        // Mostrar loader apenas se necessário (primeiro carregamento ou troca de perfume)
         const loader = document.getElementById('canvas-loader');
         
+        // Limpar e desenhar fundo
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBackground();
 
+        // Desenhar Produto e Brilho
         try {
             const img = await this.loadImage(imgPath);
+            if (hasGlow) this.drawGlow(layout);
             this.drawProduct(img, layout);
-        } catch (e) { }
+        } catch (e) { console.error("Image load error:", e); }
 
+        // Desenhar Elementos de Texto e Selos
         this.drawText(name, caption, layout, fontSize);
         if (badge) this.drawBadge(badge);
+        if (price) this.drawPrice(price, layout);
 
+        // Logo Final
         try {
             const logo = await this.loadImage('img/logo/logo-texto-branco.png');
             this.ctx.drawImage(logo, (1080 - 300) / 2, 1780, 300, 80);
         } catch (e) {}
 
-        // Garantir que o loader suma SEMPRE ao final
-        if (loader) loader.hidden = true;
+        // ESCONDER LOADER (IMPORTANTE)
+        if (loader) {
+            loader.classList.add('is-hidden');
+            loader.hidden = true; // Força dupla
+        }
+        
         this.btnDownload.disabled = false;
     }
 
@@ -160,29 +178,22 @@ class StoriesStudio {
         const style = this.currentStyle;
 
         if (style === 'elegant') {
-            grad.addColorStop(0, '#1b4d3e'); // Esmeralda D'Parfum
-            grad.addColorStop(1, '#0a1f1a');
+            grad.addColorStop(0, '#1b4d3e'); grad.addColorStop(1, '#0a1f1a');
         } else if (style === 'gold') {
-            grad.addColorStop(0, '#d4af37'); // Gold Real
-            grad.addColorStop(1, '#8a6d3b');
+            grad.addColorStop(0, '#d4af37'); grad.addColorStop(1, '#8a6d3b');
         } else if (style === 'rose') {
-            grad.addColorStop(0, '#e5b3a4'); // Rose Gold
-            grad.addColorStop(1, '#a67c74');
+            grad.addColorStop(0, '#e5b3a4'); grad.addColorStop(1, '#a67c74');
         } else if (style === 'modern') {
-            grad.addColorStop(0, '#1a1a1a'); // Black Piano
-            grad.addColorStop(1, '#000000');
+            grad.addColorStop(0, '#1a1a1a'); grad.addColorStop(1, '#000000');
         } else if (style === 'minimal') {
-            grad.addColorStop(0, '#ffffff'); // Minimalista
-            grad.addColorStop(1, '#f0f0f0');
+            grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, '#f0f0f0');
         } else if (style === 'vibrant') {
-            grad.addColorStop(0, '#ff0080'); // Vibrante
-            grad.addColorStop(1, '#7928ca');
+            grad.addColorStop(0, '#ff0080'); grad.addColorStop(1, '#7928ca');
         }
 
         this.ctx.fillStyle = grad;
         this.ctx.fillRect(0, 0, 1080, 1920);
 
-        // Textura sutil metálica
         this.ctx.globalAlpha = 0.03;
         this.ctx.strokeStyle = '#fff';
         for(let i=0; i<30; i++) {
@@ -191,30 +202,37 @@ class StoriesStudio {
         this.ctx.globalAlpha = 1.0;
     }
 
+    drawGlow(layout) {
+        let x = 540, y = 650, radius = 450;
+        if (layout === 'magazine') { x = 700; y = 700; }
+        if (layout === 'split') { y = 400; }
+
+        const glow = this.ctx.createRadialGradient(x, y, 0, x, y, radius);
+        glow.addColorStop(0, 'rgba(255,255,255,0.3)');
+        glow.addColorStop(1, 'rgba(255,255,255,0)');
+        
+        this.ctx.fillStyle = glow;
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+
     drawProduct(img, layout) {
         let w, h, x, y;
         const scale = 0.8;
         
         if (layout === 'center') {
-            w = img.width * scale;
-            h = img.height * scale;
-            x = (1080 - w) / 2;
-            y = 400;
+            w = img.width * scale; h = img.height * scale;
+            x = (1080 - w) / 2; y = 400;
         } else if (layout === 'split') {
-            w = img.width * 1.1;
-            h = img.height * 1.1;
-            x = (1080 - w) / 2;
-            y = 150;
+            w = img.width * 1.1; h = img.height * 1.1;
+            x = (1080 - w) / 2; y = 150;
         } else if (layout === 'magazine') {
-            w = img.width * 0.9;
-            h = img.height * 0.9;
-            x = 1080 - w - 100;
-            y = 500;
+            w = img.width * 0.9; h = img.height * 0.9;
+            x = 1080 - w - 100; y = 500;
         } else {
-            w = img.width * 1.2;
-            h = img.height * 1.2;
-            x = (1080 - w) / 2;
-            y = 300;
+            w = img.width * 1.2; h = img.height * 1.2;
+            x = (1080 - w) / 2; y = 300;
         }
 
         this.ctx.shadowColor = 'rgba(0,0,0,0.4)';
@@ -233,7 +251,6 @@ class StoriesStudio {
             this.ctx.fillText(name.split(' ')[0], 100, 300);
             this.ctx.font = '300 60px Inter, sans-serif';
             this.ctx.fillText(name.split(' ').slice(1).join(' '), 100, 380);
-            
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
             this.wrapText(caption, 100, 1400, 600, fontSize * 1.2);
         } else if (layout === 'split') {
@@ -253,48 +270,47 @@ class StoriesStudio {
 
     drawBadge(type) {
         const labels = {
-            lancamento: 'LANÇAMENTO',
-            novidade: 'NOVIDADE',
-            campeao: 'CAMPEÃO DE VENDAS',
-            promo: 'OFERTA ESPECIAL',
-            vip: 'EXCLUSIVO VIP',
-            last: 'ÚLTIMAS UNIDADES',
-            fixacao: 'FIXAÇÃO 24H',
-            luxo: 'LUXO ACESSÍVEL'
+            lancamento: 'LANÇAMENTO', novidade: 'NOVIDADE', campeao: 'CAMPEÃO DE VENDAS',
+            promo: 'OFERTA ESPECIAL', vip: 'EXCLUSIVO VIP', last: 'ÚLTIMAS UNIDADES',
+            fixacao: 'FIXAÇÃO 24H', luxo: 'LUXO ACESSÍVEL'
         };
-        
         this.ctx.save();
-        // Posicionamento estratégico para o canto
         this.ctx.translate(180, 180);
         this.ctx.rotate(-Math.PI / 4);
-        
-        // Sombra realista
         this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
         this.ctx.shadowBlur = 20;
-        this.ctx.shadowOffsetY = 5;
-
-        // Degradê Dourado Metálico
         const grad = this.ctx.createLinearGradient(-400, 0, 400, 0);
-        grad.addColorStop(0, '#8a6d3b');
-        grad.addColorStop(0.5, '#d4af37');
-        grad.addColorStop(1, '#8a6d3b');
-        
+        grad.addColorStop(0, '#8a6d3b'); grad.addColorStop(0.5, '#d4af37'); grad.addColorStop(1, '#8a6d3b');
         this.ctx.fillStyle = grad;
-        // Faixa bem comprida (800px) para não mostrar as pontas
         this.ctx.fillRect(-400, -45, 800, 90);
-        
-        // Bordas de Luxo
         this.ctx.shadowBlur = 0;
         this.ctx.strokeStyle = 'rgba(255,255,255,0.3)';
         this.ctx.lineWidth = 2;
         this.ctx.strokeRect(-400, -38, 800, 76);
-        
-        // Texto em destaque
         this.ctx.fillStyle = 'black';
         this.ctx.font = 'bold 30px Inter, sans-serif';
         this.ctx.textAlign = 'center';
         this.ctx.fillText(labels[type], 0, 12);
-        
+        this.ctx.restore();
+    }
+
+    drawPrice(price, layout) {
+        this.ctx.save();
+        let x = 800, y = 800;
+        if (layout === 'split') { x = 800; y = 400; }
+        if (layout === 'magazine') { x = 300; y = 1000; }
+        this.ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        this.ctx.shadowBlur = 15;
+        this.ctx.fillStyle = '#1b4d3e';
+        this.ctx.beginPath();
+        if (this.ctx.roundRect) this.ctx.roundRect(x - 120, y - 50, 240, 100, 50);
+        else this.ctx.fillRect(x - 120, y - 50, 240, 100);
+        this.ctx.fill();
+        this.ctx.shadowBlur = 0;
+        this.ctx.fillStyle = 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.font = 'bold 45px Inter, sans-serif';
+        this.ctx.fillText(price, x, y + 15);
         this.ctx.restore();
     }
 
@@ -304,27 +320,20 @@ class StoriesStudio {
         for(let n = 0; n < words.length; n++) {
             let testLine = line + words[n] + ' ';
             let metrics = this.ctx.measureText(testLine);
-            let testWidth = metrics.width;
-            if (testWidth > maxWidth && n > 0) {
+            if (metrics.width > maxWidth && n > 0) {
                 this.ctx.fillText(line, x, y);
                 line = words[n] + ' ';
                 y += lineHeight;
-            } else {
-                line = testLine;
-            }
+            } else { line = testLine; }
         }
         this.ctx.fillText(line, x, y);
     }
 
     loadImage(src) {
         if (this.imageCache.has(src)) return Promise.resolve(this.imageCache.get(src));
-        
         return new Promise((resolve, reject) => {
             const img = new Image();
-            img.onload = () => {
-                this.imageCache.set(src, img);
-                resolve(img);
-            };
+            img.onload = () => { this.imageCache.set(src, img); resolve(img); };
             img.onerror = reject;
             img.src = src;
         });
@@ -339,7 +348,6 @@ class StoriesStudio {
     }
 }
 
-// Inicializar quando o DOM estiver pronto
 window.addEventListener('DOMContentLoaded', () => {
     window.studio = new StoriesStudio();
 });
