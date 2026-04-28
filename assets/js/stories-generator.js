@@ -12,8 +12,10 @@ class StoriesStudio {
         this.btnRegenerate = document.getElementById('btn-regenerate');
         this.captionArea = document.getElementById('ai-caption');
         
+        this.imageCache = new Map();
         this.currentPerfume = null;
         this.currentStyle = 'elegant';
+        this.isGenerating = false;
         
         this.init();
     }
@@ -71,14 +73,17 @@ class StoriesStudio {
 
     async generateText() {
         const option = this.perfumeSelect.selectedOptions[0];
-        if (!option) return;
+        if (!option || this.isGenerating) return;
 
+        this.isGenerating = true;
         const name = option.value;
         const notes = option.dataset.notes;
         const family = option.dataset.family;
         const type = document.getElementById('story-type').value;
 
-        this.captionArea.value = "IA pensando em algo elegante...";
+        // Renderização Otimista: Mostra o story com template antes da IA responder
+        this.captionArea.value = this.getTemplateText(name, notes, type);
+        this.render(); 
 
         try {
             const response = await fetch('/api/generate-story', {
@@ -88,11 +93,15 @@ class StoriesStudio {
             });
             
             const data = await response.json();
-            this.captionArea.value = data.text || this.getTemplateText(name, notes, type);
+            if (data.text) {
+                this.captionArea.value = data.text;
+                this.render(); // Re-renderiza com o texto final da IA
+            }
         } catch (error) {
-            this.captionArea.value = this.getTemplateText(name, notes, type);
+            console.warn("API Error, staying with template.");
+        } finally {
+            this.isGenerating = false;
         }
-        this.render();
     }
 
     getTemplateText(name, notes, type) {
@@ -117,31 +126,23 @@ class StoriesStudio {
         const badge = document.getElementById('story-badge').value;
         const fontSize = document.getElementById('font-size').value;
 
-        document.getElementById('canvas-loader').hidden = false;
+        // O render agora é síncrono para ser instantâneo se a imagem estiver em cache
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // 1. Fundo
         this.drawBackground();
 
-        // 2. Produto
         try {
             const img = await this.loadImage(imgPath);
             this.drawProduct(img, layout);
-        } catch (e) { console.error(e); }
+        } catch (e) { }
 
-        // 3. Texto
         this.drawText(name, caption, layout, fontSize);
-
-        // 4. Selo (Badge)
         if (badge) this.drawBadge(badge);
 
-        // 5. Logo
         try {
             const logo = await this.loadImage('img/logo/logo-texto-branco.png');
             this.ctx.drawImage(logo, (1080 - 300) / 2, 1780, 300, 80);
         } catch (e) {}
 
-        document.getElementById('canvas-loader').hidden = true;
         this.btnDownload.disabled = false;
     }
 
@@ -290,9 +291,14 @@ class StoriesStudio {
     }
 
     loadImage(src) {
+        if (this.imageCache.has(src)) return Promise.resolve(this.imageCache.get(src));
+        
         return new Promise((resolve, reject) => {
             const img = new Image();
-            img.onload = () => resolve(img);
+            img.onload = () => {
+                this.imageCache.set(src, img);
+                resolve(img);
+            };
             img.onerror = reject;
             img.src = src;
         });
