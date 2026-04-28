@@ -219,20 +219,20 @@ class StoriesStudio {
 
     drawProduct(img, layout) {
         let w, h, x, y;
-        const scale = 0.8;
+        const scale = 0.75; // Reduzi levemente a escala
         
         if (layout === 'center') {
             w = img.width * scale; h = img.height * scale;
-            x = (1080 - w) / 2; y = 400;
+            x = (1080 - w) / 2; y = 350; // Subi o produto
         } else if (layout === 'split') {
-            w = img.width * 1.1; h = img.height * 1.1;
-            x = (1080 - w) / 2; y = 150;
+            w = img.width * 1.0; h = img.height * 1.0;
+            x = (1080 - w) / 2; y = 100;
         } else if (layout === 'magazine') {
-            w = img.width * 0.9; h = img.height * 0.9;
-            x = 1080 - w - 100; y = 500;
+            w = img.width * 0.85; h = img.height * 0.85;
+            x = 1080 - w - 100; y = 450;
         } else {
-            w = img.width * 1.2; h = img.height * 1.2;
-            x = (1080 - w) / 2; y = 300;
+            w = img.width * 1.1; h = img.height * 1.1;
+            x = (1080 - w) / 2; y = 250;
         }
 
         this.ctx.shadowColor = 'rgba(0,0,0,0.4)';
@@ -252,19 +252,19 @@ class StoriesStudio {
             this.ctx.font = '300 60px Inter, sans-serif';
             this.ctx.fillText(name.split(' ').slice(1).join(' '), 100, 380);
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
-            this.wrapText(caption, 100, 1400, 600, fontSize * 1.2);
+            this.wrapText(caption, 100, 1450, 600, fontSize * 1.2);
         } else if (layout === 'split') {
             this.ctx.textAlign = 'center';
             this.ctx.font = 'bold 90px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1300);
+            this.ctx.fillText(name, 540, 1350); // Desci o texto
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
-            this.wrapText(caption, 540, 1450, 850, fontSize * 1.3);
+            this.wrapText(caption, 540, 1500, 850, fontSize * 1.3);
         } else {
             this.ctx.textAlign = 'center';
-            this.ctx.font = 'bold 80px Inter, sans-serif';
-            this.ctx.fillText(name, 540, 1200);
+            this.ctx.font = 'bold 85px Inter, sans-serif';
+            this.ctx.fillText(name, 540, 1280); // Desci o texto
             this.ctx.font = `${fontSize}px Inter, sans-serif`;
-            this.wrapText(caption, 540, 1350, 800, fontSize * 1.3);
+            this.wrapText(caption, 540, 1430, 800, fontSize * 1.3);
         }
     }
 
