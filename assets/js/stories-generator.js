@@ -204,7 +204,7 @@ class StoriesStudio {
             } catch (e) { console.error("Image load error:", e); }
         }
 
-        this.drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor);
+        await this.drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor);
         if (badge && !this.isAIMode) this.drawBadge(badge);
         if (price && !this.isAIMode) this.drawPrice(price, layout);
 
@@ -291,7 +291,7 @@ class StoriesStudio {
         this.ctx.shadowBlur = 0;
     }
 
-    drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor) {
+    async drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor) {
         const isLight = this.currentStyle === 'minimal';
         this.ctx.fillStyle = isLight ? '#1a1a1a' : 'white';
         
@@ -330,29 +330,21 @@ class StoriesStudio {
             this.ctx.fillStyle = ctaColor || '#25d366';
             this.ctx.font = 'bold 36px Inter, sans-serif';
             const textWidth = this.ctx.measureText(ctaText).width;
-            const iconSize = 40;
-            const totalWidth = textWidth + iconSize + 15;
+            const iconSize = 45;
+            const totalWidth = textWidth + iconSize + 25;
             const startX = (1080 - totalWidth) / 2;
-            this.drawWhatsAppIcon(startX + 20, 1720 - 15, iconSize);
-            this.ctx.fillText(ctaText, startX + iconSize + 15 + textWidth/2, 1720);
+            
+            try {
+                const wpIcon = await this.loadImage('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png');
+                this.ctx.drawImage(wpIcon, startX, 1720 - 35, iconSize, iconSize);
+            } catch(e) {}
+            
+            this.ctx.fillText(ctaText, startX + iconSize + 25 + textWidth/2, 1720);
             this.ctx.restore();
         }
     }
 
-    drawWhatsAppIcon(x, y, size) {
-        this.ctx.save();
-        this.ctx.fillStyle = '#25d366';
-        this.ctx.beginPath();
-        this.ctx.arc(x, y, size/2, 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.strokeStyle = 'white';
-        this.ctx.lineWidth = 3;
-        this.ctx.lineCap = 'round';
-        this.ctx.beginPath();
-        this.ctx.arc(x, y, size/4, 0.5, 2.5);
-        this.ctx.stroke();
-        this.ctx.restore();
-    }
+    // Remover drawWhatsAppIcon pois agora usamos imagem original
 
     drawBadge(type) {
         const labels = {
