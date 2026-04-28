@@ -243,6 +243,61 @@
     font-size: 1.1rem;
 }
 
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+    .welcome-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .welcome-logo {
+        height: 50px;
+    }
+
+    .studio-layout {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+
+    .studio-sidebar {
+        width: 100%;
+        order: 2;
+        padding: 1.5rem;
+        border-right: none;
+        border-top: 1px solid rgba(0,0,0,0.1);
+        height: auto;
+        background: #fdfdfd;
+    }
+
+    .studio-content {
+        order: 1;
+        padding: 1rem;
+        min-height: 500px;
+        background: #eee;
+    }
+
+    #story-canvas {
+        max-width: 100%;
+        height: auto !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .style-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .action-group {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 1rem;
+        margin: 0 -1.5rem -1.5rem -1.5rem;
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
