@@ -140,7 +140,9 @@ class StoriesStudio {
         const family = option.dataset.family;
         const type = document.getElementById('story-type').value;
 
-        this.captionArea.value = isFullReview ? "A IA está redigindo uma resenha completa para você..." : this.getTemplateText(name, notes, type);
+        this.captionArea.value = isFullReview 
+            ? `Inspirado em ${name}, esta fragrância da família ${family} é puro luxo... (Redigindo resenha completa ✨)` 
+            : this.getTemplateText(name, notes, type);
         this.render(); 
 
         try {

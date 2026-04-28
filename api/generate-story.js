@@ -19,11 +19,10 @@ export default async function handler(req, res) {
         Use emojis e uma linguagem sofisticada, mas direta. Máximo 300 caracteres.`;
 
         if (isFullReview) {
-            prompt = `Você é um crítico de perfumes renomado. Escreva uma resenha completa e apaixonante para um Instagram Story sobre o perfume "${perfumeName}".
-            Fale detalhadamente sobre as notas de saída, coração e fundo: ${notes}.
-            Mencione que ele pertence à família ${family}.
-            Explique por que este perfume é uma escolha de luxo e para quais ocasiões ele é perfeito.
-            O texto deve ter entre 400 e 600 caracteres, ser envolvente e usar emojis de luxo. Retorne apenas o texto da resenha.`;
+            prompt = `Aja como um sommelier de perfumes. Escreva uma resenha luxuosa e envolvente sobre o perfume "${perfumeName}".
+            Notas: ${notes}. Família: ${family}.
+            Fale do aroma, fixação e elegância. 
+            Texto de 300-450 caracteres. Use emojis de brilho e luxo. Retorne APENAS o texto.`;
         }
 
         const result = await model.generateContent(prompt);
