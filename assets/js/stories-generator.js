@@ -76,12 +76,18 @@ class StoriesStudio {
     populatePerfumes() {
         if (typeof uniqueShopPerfumes === 'function') {
             const perfumes = uniqueShopPerfumes();
-            this.perfumeSelect.innerHTML = perfumes.map(p => 
+            const noneOption = `<option value="">--- Nenhum (Apenas Fundo) ---</option>`;
+            this.perfumeSelect.innerHTML = noneOption + perfumes.map(p => 
                 `<option value="${p[1]}" data-img="${p[0]}" data-notes="${p[5]}" data-family="${p[3]}">${p[1]}</option>`
             ).join('');
             
             this.perfumeSelect.addEventListener('change', () => {
-                this.generateText();
+                if (this.perfumeSelect.value) {
+                    this.generateText();
+                } else {
+                    this.captionArea.value = "Sua frase personalizada aqui...";
+                    this.render();
+                }
             });
         }
     }
@@ -135,7 +141,7 @@ class StoriesStudio {
         if (!option) return;
 
         const name = option.value;
-        const imgPath = this.customImage || `img/perfumes/${option.dataset.img}`;
+        const imgPath = this.customImage || (option.dataset.img ? `img/perfumes/${option.dataset.img}` : null);
         const caption = this.captionArea.value;
         const layout = document.getElementById('story-layout').value;
         const badge = document.getElementById('story-badge').value;
@@ -152,12 +158,14 @@ class StoriesStudio {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawBackground();
 
-        // Desenhar Produto e Brilho
-        try {
-            const img = await this.loadImage(imgPath);
-            if (hasGlow) this.drawGlow(layout);
-            this.drawProduct(img, layout);
-        } catch (e) { console.error("Image load error:", e); }
+        // Desenhar Produto e Brilho (Apenas se houver imagem)
+        if (imgPath) {
+            try {
+                const img = await this.loadImage(imgPath);
+                if (hasGlow) this.drawGlow(layout);
+                this.drawProduct(img, layout);
+            } catch (e) { console.error("Image load error:", e); }
+        }
 
         // Desenhar Elementos de Texto e Selos
         this.drawText(name, caption, layout, fontSize, showCTA, ctaText, ctaColor);
