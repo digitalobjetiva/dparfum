@@ -233,7 +233,12 @@
         text-align: center;
       }
 
-      @media (max-width: 760px) {
+      /* Estilo base (escondido por padrão) */
+      .mobile-slider-container { 
+        display: none; 
+      }
+
+      @media (max-width: 1024px) {
         .hero,
         .cta {
           grid-template-columns: 1fr;
@@ -255,19 +260,21 @@
           width: 100%;
         }
 
-        /* Slider Mobile Style */
+        /* Slider Mobile Style - FORÇADO */
         .mobile-slider-container {
-          display: block;
-          margin-top: 20px;
+          display: block !important;
+          margin: 25px 0;
           user-select: none;
+          position: relative;
+          z-index: 99;
         }
 
         .slider-track {
           position: relative;
-          height: 56px;
-          background: rgba(23, 76, 47, 0.08);
+          height: 60px;
+          background: #e9f0e6;
           border-radius: 999px;
-          border: 1px solid var(--line);
+          border: 2px solid var(--forest);
           display: flex;
           align-items: center;
           padding: 4px;
@@ -278,42 +285,31 @@
           position: absolute;
           width: 100%;
           text-align: center;
-          font-size: 0.85rem;
-          font-weight: 700;
+          font-size: 0.9rem;
+          font-weight: 800;
           color: var(--forest);
           text-transform: uppercase;
           letter-spacing: 1px;
           pointer-events: none;
-          background: linear-gradient(to right, var(--forest) 0%, #fff 50%, var(--forest) 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer 2s infinite linear;
+          z-index: 1;
         }
 
         .slider-thumb {
           position: relative;
-          z-index: 2;
-          width: 48px;
-          height: 48px;
+          z-index: 5;
+          width: 50px;
+          height: 50px;
           background: var(--forest);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-          box-shadow: 0 4px 12px rgba(23, 76, 47, 0.3);
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2);
           cursor: grab;
           touch-action: none;
+          left: 4px;
         }
-
-        @keyframes shimmer {
-          to { background-position: 200% center; }
-        }
-      }
-
-      @media (min-width: 761px) {
-        .mobile-slider-container { display: none; }
       }
     </style>
   </head>
