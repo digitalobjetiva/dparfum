@@ -19,14 +19,31 @@ class StoriesStudio {
     }
 
     init() {
-        // Carregar perfumes do site.js (shopPerfumes)
         this.populatePerfumes();
         
-        // Event Listeners
+        // Listeners
         this.btnGenerate.addEventListener('click', () => this.render());
         this.btnRegenerate.addEventListener('click', () => this.generateText());
         this.btnDownload.addEventListener('click', () => this.download());
         
+        // Novos controles
+        document.getElementById('story-layout').addEventListener('change', () => this.render());
+        document.getElementById('story-badge').addEventListener('change', () => this.render());
+        document.getElementById('font-size').addEventListener('input', () => this.render());
+        
+        // Upload Customizado
+        document.getElementById('custom-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    this.customImage = event.target.result;
+                    this.render();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         document.querySelectorAll('.style-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
@@ -35,13 +52,10 @@ class StoriesStudio {
                 this.render();
             });
         });
-
-        // Inicializar com o primeiro perfume
         setTimeout(() => this.render(), 500);
     }
 
     populatePerfumes() {
-        // uniqueShopPerfumes é uma função disponível no site.js
         if (typeof uniqueShopPerfumes === 'function') {
             const perfumes = uniqueShopPerfumes();
             this.perfumeSelect.innerHTML = perfumes.map(p => 
@@ -74,43 +88,19 @@ class StoriesStudio {
             });
             
             const data = await response.json();
-            
-            if (data.text) {
-                this.captionArea.value = data.text;
-            } else {
-                throw new Error(data.error || 'Erro na resposta');
-            }
+            this.captionArea.value = data.text || this.getTemplateText(name, notes, type);
         } catch (error) {
-            console.warn("Usando fallback de texto devido a erro na API:", error);
-            const text = this.getTemplateText(name, notes, type);
-            this.captionArea.value = text;
+            this.captionArea.value = this.getTemplateText(name, notes, type);
         }
-        
         this.render();
     }
 
     getTemplateText(name, notes, type) {
         const prompts = {
-            promo: [
-                `O queridinho da semana: Inspirado em ${name}. Garanta o seu pelo WhatsApp!`,
-                `Luxo acessível com fixação impecável. Peça agora o seu ${name}.`,
-                `Sua assinatura olfativa está aqui. Inspirado em ${name}, uma escolha marcante.`
-            ],
-            edu: [
-                `Você sabia? O inspirado em ${name} tem notas de ${notes.split(',')[0]}.`,
-                `Como fazer seu ${name} durar mais? Aplique nos pontos de pulsação!`,
-                `Elegância em cada borrifada. Conheça a pirâmide olfativa do ${name}.`
-            ],
-            seasonal: [
-                `Presente perfeito para este momento especial: Inspirado em ${name}.`,
-                `Celebre com fragrância. ${name} é a escolha ideal para hoje.`,
-                `Momentos inesquecíveis pedem cheiros marcantes. Conheça o ${name}.`
-            ],
-            lifestyle: [
-                `A dose de confiança que seu dia precisa. ✨ #DParfum #${name}`,
-                `Fragrância é presença. Qual é a sua hoje? A nossa é ${name}.`,
-                `Um toque de sofisticação na sua rotina. #Perfumaria #${name}`
-            ]
+            promo: [`Inspirado em ${name}: Luxo que você pode ter.`, `Garanta seu ${name} hoje!`],
+            edu: [`Você sabia? ${name} tem notas de ${notes.split(',')[0]}.`],
+            seasonal: [`O presente ideal: Inspirado em ${name}.`],
+            lifestyle: [`Sua dose diária de elegância. #${name}`]
         };
         const list = prompts[type] || prompts.promo;
         return list[Math.floor(Math.random() * list.length)];
@@ -121,123 +111,151 @@ class StoriesStudio {
         if (!option) return;
 
         const name = option.value;
-        const imgPath = `img/perfumes/${option.dataset.img}`;
+        const imgPath = this.customImage || `img/perfumes/${option.dataset.img}`;
         const caption = this.captionArea.value;
+        const layout = document.getElementById('story-layout').value;
+        const badge = document.getElementById('story-badge').value;
+        const fontSize = document.getElementById('font-size').value;
 
-        // Mostrar Loader
         document.getElementById('canvas-loader').hidden = false;
-
-        // Limpar canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // 1. Desenhar Fundo
+        // 1. Fundo
         this.drawBackground();
 
-        // 2. Carregar e Desenhar Imagem do Perfume
+        // 2. Produto
         try {
             const img = await this.loadImage(imgPath);
-            this.drawProduct(img);
-        } catch (e) {
-            console.error("Erro ao carregar imagem do perfume", e);
-        }
+            this.drawProduct(img, layout);
+        } catch (e) { console.error(e); }
 
-        // 3. Desenhar Texto
-        this.drawText(name, caption);
+        // 3. Texto
+        this.drawText(name, caption, layout, fontSize);
 
-        // 4. Desenhar Logo
+        // 4. Selo (Badge)
+        if (badge) this.drawBadge(badge);
+
+        // 5. Logo
         try {
             const logo = await this.loadImage('img/logo/logo-texto-branco.png');
-            this.ctx.drawImage(logo, (1080 - 300) / 2, 1750, 300, 80);
+            this.ctx.drawImage(logo, (1080 - 300) / 2, 1780, 300, 80);
         } catch (e) {}
 
-        // Esconder Loader
         document.getElementById('canvas-loader').hidden = true;
         this.btnDownload.disabled = false;
     }
 
     drawBackground() {
         const grad = this.ctx.createLinearGradient(0, 0, 0, 1920);
-        
-        if (this.currentStyle === 'elegant') {
+        const style = this.currentStyle;
+
+        if (style === 'elegant') {
             grad.addColorStop(0, '#1b4d3e');
             grad.addColorStop(1, '#0a1f1a');
-        } else if (this.currentStyle === 'modern') {
-            grad.addColorStop(0, '#222');
+        } else if (style === 'modern') {
+            grad.addColorStop(0, '#111');
             grad.addColorStop(1, '#000');
-        } else if (this.currentStyle === 'minimal') {
-            grad.addColorStop(0, '#f5f5f5');
-            grad.addColorStop(1, '#e0e0e0');
+        } else if (style === 'minimal') {
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(1, '#f0f0f0');
         } else {
-            grad.addColorStop(0, '#4a148c');
-            grad.addColorStop(1, '#1a237e');
+            grad.addColorStop(0, '#ff0080');
+            grad.addColorStop(1, '#7928ca');
         }
 
         this.ctx.fillStyle = grad;
         this.ctx.fillRect(0, 0, 1080, 1920);
 
-        // Adicionar elementos decorativos sutis
-        this.ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-        this.ctx.lineWidth = 2;
-        for(let i=0; i<10; i++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(Math.random()*1080, 0);
-            this.ctx.lineTo(Math.random()*1080, 1920);
-            this.ctx.stroke();
+        // Textura sutil
+        this.ctx.globalAlpha = 0.05;
+        this.ctx.strokeStyle = style === 'minimal' ? '#000' : '#fff';
+        for(let i=0; i<20; i++) {
+            this.ctx.strokeRect(Math.random()*1080, Math.random()*1920, 100, 100);
         }
+        this.ctx.globalAlpha = 1.0;
     }
 
-    drawProduct(img) {
+    drawProduct(img, layout) {
+        let w, h, x, y;
         const scale = 0.8;
-        const w = img.width * scale;
-        const h = img.height * scale;
-        const x = (1080 - w) / 2;
-        const y = 400;
-
-        // Sombra
-        this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
-        this.ctx.shadowBlur = 50;
-        this.ctx.shadowOffsetY = 30;
-
-        // Moldura elegante (opcional)
-        if(this.currentStyle === 'minimal') {
-             this.ctx.fillStyle = 'white';
-             this.ctx.fillRect(x - 20, y - 20, w + 40, h + 40);
+        
+        if (layout === 'center') {
+            w = img.width * scale;
+            h = img.height * scale;
+            x = (1080 - w) / 2;
+            y = 400;
+        } else if (layout === 'split') {
+            w = img.width * 1.1;
+            h = img.height * 1.1;
+            x = (1080 - w) / 2;
+            y = 150;
+        } else if (layout === 'magazine') {
+            w = img.width * 0.9;
+            h = img.height * 0.9;
+            x = 1080 - w - 100;
+            y = 500;
+        } else {
+            w = img.width * 1.2;
+            h = img.height * 1.2;
+            x = (1080 - w) / 2;
+            y = 300;
         }
 
+        this.ctx.shadowColor = 'rgba(0,0,0,0.4)';
+        this.ctx.shadowBlur = 40;
         this.ctx.drawImage(img, x, y, w, h);
-        
-        // Reset shadow
         this.ctx.shadowBlur = 0;
-        this.ctx.shadowOffsetY = 0;
     }
 
-    drawText(name, caption) {
+    drawText(name, caption, layout, fontSize) {
         const isLight = this.currentStyle === 'minimal';
         this.ctx.fillStyle = isLight ? '#1a1a1a' : 'white';
+        
+        if (layout === 'magazine') {
+            this.ctx.textAlign = 'left';
+            this.ctx.font = 'bold 120px Inter, sans-serif';
+            this.ctx.fillText(name.split(' ')[0], 100, 300);
+            this.ctx.font = '300 60px Inter, sans-serif';
+            this.ctx.fillText(name.split(' ').slice(1).join(' '), 100, 380);
+            
+            this.ctx.font = `${fontSize}px Inter, sans-serif`;
+            this.wrapText(caption, 100, 1400, 600, fontSize * 1.2);
+        } else if (layout === 'split') {
+            this.ctx.textAlign = 'center';
+            this.ctx.font = 'bold 90px Inter, sans-serif';
+            this.ctx.fillText(name, 540, 1300);
+            this.ctx.font = `${fontSize}px Inter, sans-serif`;
+            this.wrapText(caption, 540, 1450, 850, fontSize * 1.3);
+        } else {
+            this.ctx.textAlign = 'center';
+            this.ctx.font = 'bold 80px Inter, sans-serif';
+            this.ctx.fillText(name, 540, 1200);
+            this.ctx.font = `${fontSize}px Inter, sans-serif`;
+            this.wrapText(caption, 540, 1350, 800, fontSize * 1.3);
+        }
+    }
+
+    drawBadge(type) {
+        const labels = {
+            lancamento: 'LANÇAMENTO',
+            promo: 'OFERTA ESPECIAL',
+            vip: 'EXCLUSIVO VIP',
+            last: 'ÚLTIMAS UNIDADES'
+        };
+        
+        this.ctx.save();
+        this.ctx.translate(150, 150);
+        this.ctx.rotate(-Math.PI / 4);
+        
+        this.ctx.fillStyle = '#d4af37'; // Gold
+        this.ctx.fillRect(-200, -40, 400, 80);
+        
+        this.ctx.fillStyle = 'black';
+        this.ctx.font = 'bold 30px Inter, sans-serif';
         this.ctx.textAlign = 'center';
-
-        // Título
-        this.ctx.font = 'bold 80px Inter, sans-serif';
-        this.ctx.fillText(name.toUpperCase(), 540, 1250);
-
-        // Subtítulo
-        this.ctx.font = '300 40px Inter, sans-serif';
-        this.ctx.fillText("INSPIRADO NA ALTA PERFUMARIA", 540, 1310);
-
-        // Divisor
-        this.ctx.beginPath();
-        this.ctx.moveTo(440, 1360);
-        this.ctx.lineTo(640, 1360);
-        this.ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.3)';
-        this.ctx.stroke();
-
-        // Caption (Quebra de linha automática)
-        this.ctx.font = 'italic 45px Inter, sans-serif';
-        this.wrapText(caption, 540, 1480, 800, 60);
-
-        // CTA
-        this.ctx.font = 'bold 35px Inter, sans-serif';
-        this.ctx.fillText("PEÇA PELO WHATSAPP • @DPARFY", 540, 1700);
+        this.ctx.fillText(labels[type], 0, 10);
+        
+        this.ctx.restore();
     }
 
     wrapText(text, x, y, maxWidth, lineHeight) {

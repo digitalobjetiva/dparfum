@@ -24,7 +24,6 @@
                         <option value="">Carregando perfumes...</option>
                     </select>
                 </div>
-
                 <div class="control-group">
                     <label for="story-type">Objetivo do Story</label>
                     <select id="story-type" class="field">
@@ -44,11 +43,44 @@
                         <button class="style-btn" data-style="vibrant">Vibrante</button>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label for="story-layout">Layout</label>
+                    <select id="story-layout" class="field">
+                        <option value="center">Clássico Central</option>
+                        <option value="split">Split (Texto embaixo)</option>
+                        <option value="magazine">Editorial Revista</option>
+                        <option value="minimal">Foco no Produto</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="story-badge">Selo de Destaque</label>
+                    <select id="story-badge" class="field">
+                        <option value="">Nenhum</option>
+                        <option value="lancamento">🚀 Lançamento</option>
+                        <option value="promo">🔥 Oferta Especial</option>
+                        <option value="vip">💎 Exclusivo VIP</option>
+                        <option value="last">⏳ Últimas Unidades</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Sua Foto (Opcional)</label>
+                    <input type="file" id="custom-upload" class="field" accept="image/*">
+                    <small class="preview-hint">Substitui a foto padrão do catálogo</small>
+                </div>
+
+                <div class="control-group">
+                    <label for="font-size">Tamanho do Texto</label>
+                    <input type="range" id="font-size" min="30" max="100" value="45" class="full-width">
+                </div>
 
                 <div class="control-group">
                     <label>Legenda Gerada pela IA</label>
                     <textarea id="ai-caption" class="field" rows="4" placeholder="A IA escreverá algo incrível aqui..."></textarea>
-                    <button id="btn-regenerate" class="button button--ghost button--small">✨ Recriar texto</button>
+                    <div class="button-row">
+                        <button id="btn-regenerate" class="button button--ghost button--small">✨ Recriar texto</button>
+                    </div>
                 </div>
             </nav>
 
