@@ -928,7 +928,7 @@ function productsPage() {
 
 function lojaPage() {
   const perfumes = uniqueShopPerfumes();
-  return `${pageHero("loja")}<section class="section"><div class="section__inner"><div class="section__heading"><div><span class="eyebrow">Loja de perfumes inspirados</span><h2>Escolha, envie o pedido e receba atendimento.</h2></div><p>Todos os itens abaixo são perfumes inspirados e aparecem sem repetição de nome. Priorizamos as imagens em que o frasco aparece com melhor leitura para facilitar sua escolha.</p></div><div class="store-toolbar"><span>${perfumes.length} perfumes inspirados únicos no catálogo visual</span><a class="button button--ghost" href="${CATALOG_WHATSAPP}" target="_blank" rel="noopener">Catálogo WhatsApp</a></div><div class="shop-grid">${perfumes.map(shopCard).join("")}</div></div></section>${fragranceGuideSection()}`;
+  return `${pageHero("loja")}<section class="section"><div class="section__inner"><div class="section__heading"><div><span class="eyebrow">Loja de perfumes inspirados</span><h2>Escolha, envie o pedido e receba atendimento.</h2></div><p>Nesta vitrine, selecionamos cuidadosamente cada fragrância com as melhores apresentações visuais, garantindo uma navegação limpa, sem repetições e focada em ajudar você a encontrar sua assinatura olfativa ideal.</p></div><div class="store-toolbar"><span>${perfumes.length} opções exclusivas em nosso catálogo</span><a class="button button--ghost" href="${CATALOG_WHATSAPP}" target="_blank" rel="noopener">Catálogo WhatsApp</a></div><div class="shop-grid">${perfumes.map(shopCard).join("")}</div></div></section>${fragranceGuideSection()}`;
 }
 
 function catalogPage() {
