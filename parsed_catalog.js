@@ -2102,7 +2102,7 @@ const newCatalog = [
   [
     "Arbo",
     "Boticário",
-    "Nacional masculino"
+    "Nacional feminino"
   ],
   [
     "Accordes",
@@ -2157,12 +2157,12 @@ const newCatalog = [
   [
     "Connexion",
     "Boticário",
-    "Nacional masculino"
+    "Nacional feminino"
   ],
   [
     "Dimitri",
     "Boticário",
-    "Nacional masculino"
+    "Nacional feminino"
   ],
   [
     "Green Tea",
@@ -2228,5 +2228,105 @@ const newCatalog = [
     "Zaad",
     "Boticário",
     "Nacional masculino"
+  ],
+  [
+    "Angel Nova",
+    "Thierry Mugler",
+    "Importado feminino"
+  ],
+  [
+    "Baccarat Rouge 540",
+    "Maison Francis Kurkdjian",
+    "Importado feminino"
+  ],
+  [
+    "Good Girl Blush",
+    "Carolina Herrera",
+    "Importado feminino"
+  ],
+  [
+    "My Way",
+    "Giorgio Armani",
+    "Importado feminino"
+  ],
+  [
+    "Paradoxe",
+    "Prada",
+    "Importado feminino"
+  ],
+  [
+    "Fame",
+    "Paco Rabanne",
+    "Importado feminino"
+  ],
+  [
+    "Olympéa Flora",
+    "Paco Rabanne",
+    "Importado feminino"
+  ],
+  [
+    "212 Heroes For Her",
+    "Carolina Herrera",
+    "Importado feminino"
+  ],
+  [
+    "Irresistible",
+    "Givenchy",
+    "Importado feminino"
+  ],
+  [
+    "Devotion",
+    "Dolce & Gabbana",
+    "Importado feminino"
+  ],
+  [
+    "Sauvage Elixir",
+    "Dior",
+    "Importado masculino"
+  ],
+  [
+    "1 Million Elixir",
+    "Paco Rabanne",
+    "Importado masculino"
+  ],
+  [
+    "Phantom",
+    "Paco Rabanne",
+    "Importado masculino"
+  ],
+  [
+    "Invictus Victory",
+    "Paco Rabanne",
+    "Importado masculino"
+  ],
+  [
+    "Bad Boy Cobalt",
+    "Carolina Herrera",
+    "Importado masculino"
+  ],
+  [
+    "Y Eau de Parfum",
+    "Yves S. Laurent",
+    "Importado masculino"
+  ],
+  [
+    "Le Male Le Parfum",
+    "Jean Paul Gaultier",
+    "Importado masculino"
+  ],
+  [
+    "Acqua di Giò Profondo",
+    "Giorgio Armani",
+    "Importado masculino"
+  ],
+  [
+    "Eros Parfum",
+    "Versace",
+    "Importado masculino"
+  ],
+  [
+    "Boss Bottled Elixir",
+    "Hugo Boss",
+    "Importado masculino"
   ]
 ];
