@@ -80,7 +80,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "212 Nyc",
+    "212 Nyc (Masc)",
     "Carolina Herrera",
     "Importado masculino"
   ],
@@ -90,7 +90,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Light Blue",
+    "Light Blue (Masc)",
     "Dolce & Gabbana",
     "Importado masculino"
   ],
@@ -220,7 +220,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Pure Xs",
+    "Pure Xs (Masc)",
     "Paco Rabanne",
     "Importado masculino"
   ],
@@ -345,7 +345,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Hipnose",
+    "Hipnose (Masc)",
     "Lancôme",
     "Importado masculino"
   ],
@@ -375,7 +375,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "L'eau D'Issey",
+    "L'eau D'Issey (Masc)",
     "Issey Miyake",
     "Importado masculino"
   ],
@@ -465,7 +465,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Lacoste",
+    "Lacoste (Masc)",
     "Lacoste",
     "Importado masculino"
   ],
@@ -630,7 +630,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Ch Privê",
+    "Ch Privê (Masc)",
     "Carolina Herrera",
     "Importado masculino"
   ],
@@ -680,7 +680,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Diesel Fuel for Life",
+    "Diesel Fuel for Life (Masc)",
     "Diesel",
     "Importado masculino"
   ],
@@ -710,12 +710,12 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Eternity",
+    "Eternity (Masc)",
     "Calvin Klein",
     "Importado masculino"
   ],
   [
-    "Euphoria",
+    "Euphoria (Masc)",
     "Calvin Klein",
     "Importado masculino"
   ],
@@ -770,7 +770,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Angel",
+    "Angel (Masc)",
     "Thierry Mugler",
     "Importado masculino"
   ],
@@ -795,7 +795,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Animale",
+    "Animale (Masc)",
     "Animale",
     "Importado masculino"
   ],
@@ -870,7 +870,7 @@ const newCatalog = [
     "Importado masculino"
   ],
   [
-    "Black Xs",
+    "Black Xs (Masc)",
     "Paco Rabanne",
     "Importado masculino"
   ],
@@ -945,7 +945,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "212 Nyc",
+    "212 Nyc (Fem)",
     "Carolina Herrera",
     "Importado feminino"
   ],
@@ -1090,7 +1090,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Pure Xs",
+    "Pure Xs (Fem)",
     "Paco Rabanne",
     "Importado feminino"
   ],
@@ -1180,7 +1180,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Hipnose",
+    "Hipnose (Fem)",
     "Lancôme",
     "Importado feminino"
   ],
@@ -1195,7 +1195,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "L'eau D'issey",
+    "L'eau D'issey (Fem)",
     "Issey Miyake",
     "Importado feminino"
   ],
@@ -1250,7 +1250,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Lacoste",
+    "Lacoste (Fem)",
     "Lacoste",
     "Importado feminino"
   ],
@@ -1300,7 +1300,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Light Blue",
+    "Light Blue (Fem)",
     "Dolce & Gabbana",
     "Importado feminino"
   ],
@@ -1415,7 +1415,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Ch Privê",
+    "Ch Privê (Fem)",
     "Carolina Herrera",
     "Importado feminino"
   ],
@@ -1475,7 +1475,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Diesel Fuel For Life",
+    "Diesel Fuel For Life (Fem)",
     "Diesel",
     "Importado feminino"
   ],
@@ -1505,7 +1505,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Euphoria",
+    "Euphoria (Fem)",
     "Calvin Klein",
     "Importado feminino"
   ],
@@ -1515,7 +1515,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Eternity",
+    "Eternity (Fem)",
     "Calvin Klein",
     "Importado feminino"
   ],
@@ -1640,7 +1640,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Angel",
+    "Angel (Fem)",
     "Thierry Mugler",
     "Importado feminino"
   ],
@@ -1700,7 +1700,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Animale",
+    "Animale (Fem)",
     "Animale",
     "Importado feminino"
   ],
@@ -1755,7 +1755,7 @@ const newCatalog = [
     "Importado feminino"
   ],
   [
-    "Black Xs",
+    "Black Xs (Fem)",
     "Paco Rabanne",
     "Importado feminino"
   ],
